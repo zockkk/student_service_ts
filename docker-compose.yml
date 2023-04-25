@@ -1,0 +1,17 @@
+version: '3'
+services: 
+  students-service:
+    build:
+      context: ./students-service
+      dockerfile: Dockerfile.dev
+    container_name: students_service
+    restart: always
+    networks:
+      - jmu_network
+    volumes:
+      - './students-service:/var/www/students-service'
+    ports:
+      - "8050:3000"
+networks:
+  jmu_network:
+    external: true
