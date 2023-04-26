@@ -1,33 +1,49 @@
-const educationServiceTasck = require('../services/education.service')
+import { Request, Response } from "express"
+import { IEducationMainService } from "../services/education.service"
 
 export class EducationController {
+    private educationService: IEducationMainService
+
     constructor(
-        educationServiceIN
+        educationServiceIN: IEducationMainService
     ) {
         this.educationService = educationServiceIN
     }
 
-    async getAllStudents(req, res){
-        studentService.getAllStudents().then(students =>{
-            res.json({students})
-        })
+    async getAllStudents(req: Request, res: Response){
+        const idGroup = <string> req.query.idGroup
+        if (!idGroup){
+            res.status(400).json({
+                error: "Не указан идентификатор департамента"
+            })
+            return
+        }
+        const pIdGroup = parseInt(idGroup)
+        const students = await this.educationService.getInfoStudents(pIdGroup)
+        res.json({students})
     }
 
-    async getAllInfo(req,res){
-        let idDepartment = req.query.idDepartment
+    async getAllInfo(req: Request, res: Response){
+        const idDepartment = <string> req.query.idDepartment
         if (!idDepartment){
             res.status(400).json({
                 error: "Не указан идентификатор департамента"
             })
             return
         }
-        idDepartment = parseInt(idDepartment)
-        const reportData = await educationServiceTasck.getGroupsReportData(idDepartment)
+        const pIdDepartment = parseInt(idDepartment)
+        const reportData = await this.educationService.getGroupsReportData(pIdDepartment)
         res.json(reportData)
     }
 
-    async insertStudents(req, res){
-        const data = req.body
+    async insertStudents(req: Request, res: Response){
+        const data:{
+            firstname:string,
+            lastname: string,
+            middlename?: string,
+            birthday: string,
+            gender:string
+        } = req.body
         if (!data){
             res.status(400).json({
                 error: "Нет тела запроса"
@@ -58,8 +74,9 @@ export class EducationController {
             })
             return
         }
+
         try {
-            await studentService.insertStudent(data)
+            await this.educationService.insertStudent(data)
             res.status(200).end()
         } catch(error){
             res.status(500).json({

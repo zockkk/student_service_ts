@@ -1,4 +1,6 @@
-const mainConnection = require('knex')({
+import knex from 'knex'
+
+export const mainConnection = knex({
     client: 'pg',
     connection: {
       //host : 'db-jmu',
@@ -9,5 +11,3 @@ const mainConnection = require('knex')({
       database : 'jmu'
     }
 });
-
-module.exports.mainConnection = mainConnection
