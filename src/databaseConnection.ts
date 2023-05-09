@@ -7,7 +7,7 @@ export const mainConnection = knex({
       host : 'localhost',
       port : 5432,
       user : 'dbjmu',
-      password : 'Afgihn215zxdg',
+      password : '*******',
       database : 'jmu'
     }
 });
